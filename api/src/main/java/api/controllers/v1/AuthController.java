@@ -5,6 +5,8 @@ import api.dtos.responses.Response;
 import api.models.User;
 import api.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +19,10 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping(path = "/register")
-    public Response<User> register(@RequestBody UserRegistrationRequestDTO request) {
-        return null;
+    public ResponseEntity<Response<User>> register(@RequestBody UserRegistrationRequestDTO request) {
+        User user = this.userService.create(request.convert());
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new Response<>(user, null));
     }
 }

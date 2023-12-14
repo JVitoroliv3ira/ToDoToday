@@ -1,5 +1,6 @@
 package api.dtos.requests;
 
+import api.models.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,4 +18,13 @@ public class UserRegistrationRequestDTO {
     @NotNull(message = "A senha não pode ser nula.")
     @Size(min = 6, max = 120, message = "A senha deve ter entre 6 e 120 caracteres.")
     private String password;
+
+    public User convert() {
+        return User
+                .builder()
+                .name(this.name)
+                .email(this.email)
+                .password(this.password)
+                .build();
+    }
 }

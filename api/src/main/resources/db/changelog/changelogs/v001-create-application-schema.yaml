@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: v001-1-create-application-schema
+      context: ddl
+      author: Joao Vitor de Oliveira Santos
+      changes:
+        - sql:
+            sql: create schema todo_today;

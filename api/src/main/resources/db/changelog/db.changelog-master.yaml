@@ -3,3 +3,5 @@ databaseChangeLog:
       file: "db/changelog/changelogs/v001-create-application-schema.yaml"
   - include:
       file: "db/changelog/changelogs/v002-create-user-sequence.yaml"
+  - include:
+      file: "db/changelog/changelogs/v003-create-user-table.yaml"

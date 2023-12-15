@@ -1,10 +1,10 @@
 package api.dtos.responses;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 
 import java.util.List;
 
-@RequiredArgsConstructor
+@Data
 public class Response<C> {
     private final C content;
     private final List<String> errors;

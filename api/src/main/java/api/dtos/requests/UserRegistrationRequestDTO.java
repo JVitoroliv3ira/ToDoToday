@@ -4,7 +4,9 @@ import api.models.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
 
+@Getter
 public class UserRegistrationRequestDTO {
     @NotNull(message = "O nome não pode ser nulo.")
     @Size(min = 5, max = 70, message = "O nome deve ter entre 5 e 70 caracteres.")
@@ -22,9 +24,9 @@ public class UserRegistrationRequestDTO {
     public User convert() {
         return User
                 .builder()
-                .name(this.name)
-                .email(this.email)
-                .password(this.password)
+                .name(this.getName())
+                .email(this.getEmail())
+                .password(this.getPassword())
                 .build();
     }
 }

@@ -34,6 +34,7 @@ databaseChangeLog:
       id: v003-2-grant-user-table
       context: grant
       author: Joao Vitor de Oliveira Santos
+      dbms: postgresql
       changes:
         - sql:
             sql: grant select, insert, delete, update on todo_today.tb_users to d_todo_today;

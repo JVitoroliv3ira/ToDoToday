@@ -1,6 +1,7 @@
 package api.dtos.requests;
 
 import api.models.User;
+import api.utils.EncoderUtil;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -26,7 +27,7 @@ public class UserRegistrationRequestDTO {
                 .builder()
                 .name(this.getName())
                 .email(this.getEmail())
-                .password(this.getPassword())
+                .password(EncoderUtil.encode(this.getPassword()))
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package api.controllers.v1;
 
+import api.dtos.requests.UserAuthenticationRequestDTO;
 import api.dtos.requests.UserRegistrationRequestDTO;
 import api.dtos.responses.Response;
 import api.models.User;
@@ -26,5 +27,10 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new Response<>(user, null));
+    }
+
+    @PostMapping(path = "/login")
+    public ResponseEntity<Response<User>> login(@RequestBody @Valid UserAuthenticationRequestDTO request) {
+        return null;
     }
 }

@@ -8,6 +8,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -52,5 +53,9 @@ public class AuthenticationService {
         if (Boolean.FALSE.equals(EncoderUtil.matches(rawPassword, encodedPassword))) {
             throw new BadRequestException("Credenciais incorretas. Por favor, verifique-as e tente novamente.");
         }
+    }
+
+    public String getAuthenticatedUserEmail() {
+        return (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

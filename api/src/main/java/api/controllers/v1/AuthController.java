@@ -12,7 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RequestMapping(path = "/api/v1/auth")
@@ -22,12 +25,13 @@ public class AuthController {
     private final AuthenticationService authService;
 
     @PostMapping(path = "/register")
-    public ResponseEntity<Response<User>> register(@RequestBody @Valid UserRegistrationRequestDTO request) {
+    public ResponseEntity<Response<UserAuthenticationResponseDTO>> register(@RequestBody @Valid UserRegistrationRequestDTO request) {
         this.userService.validateEmailUniqueness(request.getEmail());
         User user = this.userService.create(request.convert());
+        String token = this.authService.generateToken(user.getEmail());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new Response<>(user, null));
+                .body(new Response<>(new UserAuthenticationResponseDTO(request.getEmail(), token), null));
     }
 
     @PostMapping(path = "/login")

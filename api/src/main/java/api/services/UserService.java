@@ -22,7 +22,7 @@ public class UserService implements UserDetailsService {
 
     public void validateEmailUniqueness(String email) {
         if (Boolean.TRUE.equals(this.repository.existsByEmail(email))) {
-            throw new UnprocessableEntityException("Este e-mail já está sendo utilizado.");
+            throw new BadRequestException("Este e-mail já está sendo utilizado.");
         }
     }
 

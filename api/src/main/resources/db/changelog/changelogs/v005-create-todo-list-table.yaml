@@ -27,7 +27,7 @@ databaseChangeLog:
                   type: numeric(12, 0)
                   constraints:
                     foreignKeyName: fk_todo_list_user
-                    references: todo_list.tb_users(id)
+                    references: todo_today.tb_users(id)
   - changeSet:
       id: v005-2-grant-todo-list-table
       context: grant

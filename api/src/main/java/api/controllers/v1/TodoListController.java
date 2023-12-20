@@ -11,10 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping(path = "/api/v1/todo-list")
@@ -30,5 +27,15 @@ public class TodoListController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new Response<>(new TodoListDetailResponseDTO(todoList), null));
+    }
+
+    @DeleteMapping(path = "/delete/{id}")
+    public ResponseEntity<Response<String>> delete(@PathVariable("id") Long id) {
+        User authenticatedUser = this.authService.getAuthenticatedUser();
+        this.todoListService.validateTodoListOwnership(id, authenticatedUser);
+        this.todoListService.delete(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Response<>("Lista de tarefas deletada com sucesso.", null));
     }
 }

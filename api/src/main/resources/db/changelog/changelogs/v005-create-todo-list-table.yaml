@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: v005-1-create-todo-list-table
+      context: ddl
+      author: Joao Vitor de Oliveira Santos
+      changes:
+        - createTable:
+            schemaName: todo_today
+            tableName: tb_todo_lists
+            columns:
+              - column:
+                  name: id
+                  type: numeric(12, 0)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_todo_list
+              - column:
+                  name: title
+                  type: varchar2(60)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar2(500)
+              - column:
+                  name: owner
+                  type: numeric(12, 0)
+                  constraints:
+                    foreignKeyName: fk_todo_list_user
+                    references: todo_list.tb_users(id)
+  - changeSet:
+      id: v005-2-grant-todo-list-table
+      context: grant
+      author: Joao Vitor de Oliveira Santos
+      dbms: postgresql
+      changes:
+        - sql:
+            sql: grant select, insert, delete, update on todo_today.tb_todo_lists to d_todo_today;

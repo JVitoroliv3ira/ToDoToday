@@ -5,3 +5,7 @@ databaseChangeLog:
       file: "db/changelog/changelogs/v002-create-user-sequence.yaml"
   - include:
       file: "db/changelog/changelogs/v003-create-user-table.yaml"
+  - include:
+      file: "db/changelog/changelogs/v004-create-todo-list-sequence.yaml"
+  - include:
+      file: "db/changelog/changelogs/v005-create-todo-list-table.yaml"

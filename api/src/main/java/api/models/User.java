@@ -1,5 +1,6 @@
 package api.models;
 
+import api.contracts.IEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.util.Objects;
 @Builder
 @Table(schema = "todo_today", name = "tb_users")
 @Entity
-public class User {
+public class User implements IEntity<Long> {
 
     @Id
     @SequenceGenerator(name = "sq_users", schema = "todo_today", sequenceName = "sq_users", initialValue = 1, allocationSize = 1)

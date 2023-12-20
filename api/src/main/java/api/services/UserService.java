@@ -1,8 +1,8 @@
 package api.services;
 
+import api.contracts.ICrudService;
 import api.dtos.DetailsDTO;
 import api.exceptions.BadRequestException;
-import api.exceptions.UnprocessableEntityException;
 import api.models.User;
 import api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +12,17 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements ICrudService<User, Long, UserRepository>, UserDetailsService {
     private final UserRepository repository;
 
-    public User create(User entity) {
-        entity.setId(null);
-        return this.repository.save(entity);
+    @Override
+    public UserRepository getRepository() {
+        return this.repository;
+    }
+
+    @Override
+    public String getNotFoundMessage() {
+        return "Usuário não encontrado na base de dados.";
     }
 
     public void validateEmailUniqueness(String email) {
@@ -30,7 +35,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws BadRequestException {
         User user = this.repository
                 .findByEmail(email)
-                .orElseThrow(() -> new BadRequestException("Usuário não encontrado na base de dados."));
+                .orElseThrow(() -> new BadRequestException(this.getNotFoundMessage()));
         return new DetailsDTO(user);
     }
 }

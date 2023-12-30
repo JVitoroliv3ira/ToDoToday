@@ -1,6 +1,7 @@
 package api.controllers.v1;
 
 import api.dtos.requests.TodoListCreationRequestDTO;
+import api.dtos.responses.PaginatedResponseDTO;
 import api.dtos.responses.Response;
 import api.dtos.responses.TodoListDetailResponseDTO;
 import api.models.TodoList;
@@ -9,6 +10,7 @@ import api.services.AuthenticationService;
 import api.services.TodoListService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,15 @@ public class TodoListController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new Response<>(new TodoListDetailResponseDTO(todoList), null));
+    }
+
+    @GetMapping(path = "/list")
+    public ResponseEntity<Response<PaginatedResponseDTO<TodoListDetailResponseDTO>>> list(@RequestParam Integer pageNumber, @RequestParam Integer size) {
+        User owner = this.authService.getAuthenticatedUser();
+        Page<TodoListDetailResponseDTO> data = this.todoListService.findAllByOwner(pageNumber, size, owner);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Response<>(new PaginatedResponseDTO<>(data), null));
     }
 
     @DeleteMapping(path = "/delete/{id}")

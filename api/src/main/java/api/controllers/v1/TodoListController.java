@@ -41,15 +41,6 @@ public class TodoListController {
                 .body(new Response<>(new TodoListDetailResponseDTO(todoList), null));
     }
 
-    @GetMapping(path = "/list")
-    public ResponseEntity<Response<PaginatedResponseDTO<TodoListDetailResponseDTO>>> list(@RequestParam Integer pageNumber, @RequestParam Integer size) {
-        User owner = this.authService.getAuthenticatedUser();
-        Page<TodoListDetailResponseDTO> data = this.todoListService.findAllByOwner(pageNumber, size, owner);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new Response<>(new PaginatedResponseDTO<>(data), null));
-    }
-
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<Response<String>> delete(@PathVariable("id") Long id) {
         User authenticatedUser = this.authService.getAuthenticatedUser();
@@ -58,5 +49,14 @@ public class TodoListController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new Response<>("Lista de tarefas deletada com sucesso.", null));
+    }
+
+    @GetMapping(path = "/list")
+    public ResponseEntity<Response<PaginatedResponseDTO<TodoListDetailResponseDTO>>> list(@RequestParam Integer pageNumber, @RequestParam Integer size) {
+        User owner = this.authService.getAuthenticatedUser();
+        Page<TodoListDetailResponseDTO> data = this.todoListService.findAllByOwner(pageNumber, size, owner);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Response<>(new PaginatedResponseDTO<>(data), null));
     }
 }

@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
@@ -24,6 +27,7 @@ class TodoListServiceTest {
     private TodoListService todoListService;
 
     private static final String TODO_LIST_NOT_FOUND_MESSAGE = "Lista de tarefas não encontrada na base de dados.";
+    private static final String TODO_LIST_OWNERSHIP_FAILURE_MESSAGE = "Você não tem permissão para realizar esta ação.";
     private final User ownerPayload = new User(1L, "payload", "payload@payload.com", "payload_123");
 
     @Autowired
@@ -126,5 +130,35 @@ class TodoListServiceTest {
         when(this.todoListRepository.existsById(payload)).thenReturn(Boolean.TRUE);
         this.todoListService.delete(payload);
         verify(this.todoListRepository, times(1)).deleteById(payload);
+    }
+
+    @Test
+    void validate_todo_list_ownership_should_call_exists_by_id_and_owner_method_of_todo_list_repository() {
+        Long payload = 21L;
+        when(this.todoListRepository.existsByIdAndOwner(payload, ownerPayload)).thenReturn(Boolean.TRUE);
+        this.todoListService.validateTodoListOwnership(payload, ownerPayload);
+        verify(this.todoListRepository, times(1)).existsByIdAndOwner(payload, ownerPayload);
+    }
+
+    @Test
+    void validate_todo_list_ownership_should_throw_an_exception_when_requested_todo_list_does_not_exists() {
+        Long payload = 22L;
+        when(this.todoListRepository.existsByIdAndOwner(payload, ownerPayload)).thenReturn(Boolean.FALSE);
+        assertThatThrownBy(() -> this.todoListService.validateTodoListOwnership(payload, ownerPayload))
+                .hasMessage(TODO_LIST_OWNERSHIP_FAILURE_MESSAGE)
+                .isInstanceOf(BadRequestException.class);
+    }
+
+    @Test
+    void find_all_by_owner_should_call_find_all_by_owner_method_of_todo_list_repository() {
+        int pageNumberPayload = 0;
+        int pageSizePayload = 5;
+        Pageable pageablePayload = PageRequest.of(pageNumberPayload, pageSizePayload);
+        when(this.todoListRepository.findAllByOwner(pageablePayload, ownerPayload)).thenReturn(Page.empty());
+        this.todoListService.findAllByOwner(pageNumberPayload, pageSizePayload, ownerPayload);
+        verify(this.todoListRepository, times(1)).findAllByOwner(
+                pageablePayload,
+                ownerPayload
+        );
     }
 }

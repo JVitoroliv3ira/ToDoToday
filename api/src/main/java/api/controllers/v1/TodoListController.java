@@ -31,6 +31,16 @@ public class TodoListController {
                 .body(new Response<>(new TodoListDetailResponseDTO(todoList), null));
     }
 
+    @GetMapping(path = "/read/{id}")
+    public ResponseEntity<Response<TodoListDetailResponseDTO>> read(@PathVariable("id") Long id) {
+        User authenticatedUser = this.authService.getAuthenticatedUser();
+        this.todoListService.validateTodoListOwnership(id, authenticatedUser);
+        TodoList todoList = this.todoListService.read(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Response<>(new TodoListDetailResponseDTO(todoList), null));
+    }
+
     @GetMapping(path = "/list")
     public ResponseEntity<Response<PaginatedResponseDTO<TodoListDetailResponseDTO>>> list(@RequestParam Integer pageNumber, @RequestParam Integer size) {
         User owner = this.authService.getAuthenticatedUser();

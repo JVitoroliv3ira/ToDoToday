@@ -48,7 +48,7 @@ public class TodoListController {
         this.todoListService.validateTodoListOwnership(request.getId(), authenticatedUser);
         TodoList todoList = this.todoListService.update(request.convert(authenticatedUser));
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.OK)
                 .body(new Response<>(new TodoListDetailResponseDTO(todoList), null));
     }
 

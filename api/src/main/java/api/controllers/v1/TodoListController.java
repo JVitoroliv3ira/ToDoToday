@@ -1,6 +1,7 @@
 package api.controllers.v1;
 
 import api.dtos.requests.TodoListCreationRequestDTO;
+import api.dtos.requests.TodoListUpdateRequestDTO;
 import api.dtos.responses.PaginatedResponseDTO;
 import api.dtos.responses.Response;
 import api.dtos.responses.TodoListDetailResponseDTO;
@@ -38,6 +39,16 @@ public class TodoListController {
         TodoList todoList = this.todoListService.read(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
+                .body(new Response<>(new TodoListDetailResponseDTO(todoList), null));
+    }
+
+    @PutMapping(path = "/update")
+    public ResponseEntity<Response<TodoListDetailResponseDTO>> update(@RequestBody @Valid TodoListUpdateRequestDTO request) {
+        User authenticatedUser = this.authService.getAuthenticatedUser();
+        this.todoListService.validateTodoListOwnership(request.getId(), authenticatedUser);
+        TodoList todoList = this.todoListService.update(request.convert(authenticatedUser));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
                 .body(new Response<>(new TodoListDetailResponseDTO(todoList), null));
     }
 

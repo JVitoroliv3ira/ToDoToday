@@ -9,3 +9,7 @@ databaseChangeLog:
       file: "db/changelog/changelogs/v004-create-todo-list-sequence.yaml"
   - include:
       file: "db/changelog/changelogs/v005-create-todo-list-table.yaml"
+  - include:
+      file: "db/changelog/changelogs/v006-create-todo-sequence.yaml"
+  - include:
+      file: "db/changelog/changelogs/v007-create-todo-table.yaml"

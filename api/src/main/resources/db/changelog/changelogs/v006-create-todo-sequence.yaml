@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: v006-1-create-todo-sequence
+      context: ddl
+      author: Joao Vitor de Oliveira Santos
+      changes:
+        - createSequence:
+            schemaName: todo_today
+            sequenceName: sq_todos
+            startValue: 1
+            incrementBy: 1
+  - changeSet:
+      id: v006-2-grant-todo-sequence
+      context: grant
+      author: Joao Vitor de Oliveira Santos
+      dbms: postgresql
+      changes:
+        - sql:
+            sql: grant usage, select on todo_today.sq_todos to d_todo_today;

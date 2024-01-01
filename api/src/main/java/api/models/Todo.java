@@ -4,7 +4,7 @@ import api.contracts.IEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -31,7 +31,7 @@ public class Todo implements IEntity<Long> {
     private Boolean finished;
 
     @Column(name = "due_date")
-    private Date dueDate;
+    private LocalDate dueDate;
 
     @ManyToOne
     @JoinColumn(name = "todo_list_id", nullable = false)

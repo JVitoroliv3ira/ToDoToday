@@ -1,6 +1,7 @@
 package api.controllers.v1;
 
 import api.dtos.requests.TodoCreationRequestDTO;
+import api.dtos.responses.PaginatedResponseDTO;
 import api.dtos.responses.Response;
 import api.dtos.responses.TodoDetailResponseDTO;
 import api.models.Todo;
@@ -10,6 +11,7 @@ import api.services.TodoListService;
 import api.services.TodoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -63,5 +65,15 @@ public class TodoController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new Response<>(new TodoDetailResponseDTO(updatedTodo), null));
+    }
+
+    @GetMapping(path = "/list/{id}")
+    public ResponseEntity<Response<PaginatedResponseDTO<TodoDetailResponseDTO>>> list(@PathVariable("id") Long id, @RequestParam Integer pageNumber, @RequestParam Integer size) {
+        User authenticatedUser = this.authenticationService.getAuthenticatedUser();
+        this.todoListService.validateTodoListOwnership(id, authenticatedUser);
+        Page<TodoDetailResponseDTO> data = this.todoService.findAllByTodoListId(pageNumber, size, id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Response<>(new PaginatedResponseDTO<>(data), null));
     }
 }

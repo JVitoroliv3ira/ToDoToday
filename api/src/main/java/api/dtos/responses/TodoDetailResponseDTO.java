@@ -30,6 +30,6 @@ public class TodoDetailResponseDTO {
             return Boolean.FALSE;
         }
 
-        return LocalDate.now().isAfter(this.getDueDate());
+        return !this.getFinished() && LocalDate.now().isAfter(this.getDueDate());
     }
 }

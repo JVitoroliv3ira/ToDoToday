@@ -52,4 +52,16 @@ public class TodoController {
                 .status(HttpStatus.OK)
                 .body(new Response<>("Tarefa deletada com sucesso.", null));
     }
+
+    @PutMapping(path = "/toggle/{id}")
+    public ResponseEntity<Response<TodoDetailResponseDTO>> toggle(@PathVariable("id") Long id) {
+        Todo todo = this.todoService.read(id);
+        User authenticatedUser = this.authenticationService.getAuthenticatedUser();
+        this.todoListService.validateTodoListOwnership(todo.getTodoList().getId(), authenticatedUser);
+        todo.setFinished(!todo.getFinished());
+        Todo updatedTodo = this.todoService.update(todo);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Response<>(new TodoDetailResponseDTO(updatedTodo), null));
+    }
 }

@@ -41,4 +41,15 @@ public class TodoController {
                 .status(HttpStatus.OK)
                 .body(new Response<>(new TodoDetailResponseDTO(todo), null));
     }
+
+    @DeleteMapping(path = "/delete/{id}")
+    public ResponseEntity<Response<String>> delete(@PathVariable("id") Long id) {
+        Todo todo = this.todoService.read(id);
+        User authenticatedUser = this.authenticationService.getAuthenticatedUser();
+        this.todoListService.validateTodoListOwnership(todo.getTodoList().getId(), authenticatedUser);
+        this.todoService.delete(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new Response<>("Tarefa deletada com sucesso.", null));
+    }
 }
